@@ -5,6 +5,8 @@
   var actionsList = document.getElementById("actions-list");
   var addActionBtn = document.getElementById("add-action");
   var clearBtn = document.getElementById("clear-btn");
+  var copyBtn = document.getElementById("copy-btn");
+  var copyStatus = document.getElementById("copy-status");
   var resultArea = document.getElementById("result");
   var actionCounter = 0;
   var lastBuiltDocument = "";
@@ -486,6 +488,85 @@
     return false;
   }
 
+  function clearCopyStatus() {
+    copyStatus.hidden = true;
+    copyStatus.textContent = "";
+    copyStatus.classList.remove("is-manual");
+  }
+
+  function showCopyStatus(message, isManual) {
+    copyStatus.hidden = false;
+    copyStatus.textContent = message;
+    if (isManual) {
+      copyStatus.classList.add("is-manual");
+    } else {
+      copyStatus.classList.remove("is-manual");
+    }
+  }
+
+  function updateCopyButtonState() {
+    copyBtn.disabled = !hasText(resultArea.value);
+  }
+
+  function selectResultText() {
+    resultArea.focus();
+    resultArea.select();
+    try {
+      resultArea.setSelectionRange(0, resultArea.value.length);
+    } catch (error) {
+      // Некоторые окружения не поддерживают setSelectionRange для textarea.
+    }
+  }
+
+  function copyWithExecCommand() {
+    selectResultText();
+    try {
+      return Boolean(document.execCommand("copy"));
+    } catch (error) {
+      return false;
+    }
+  }
+
+  function copyResultText() {
+    var text = resultArea.value;
+    if (!hasText(text)) {
+      updateCopyButtonState();
+      clearCopyStatus();
+      return;
+    }
+
+    clearCopyStatus();
+
+    function onSuccess() {
+      showCopyStatus("ТЗ скопировано", false);
+    }
+
+    function onManualFallback() {
+      selectResultText();
+      showCopyStatus(
+        "Автоматическое копирование недоступно. Текст выделен — скопируйте вручную: Ctrl+C (на Mac: ⌘C).",
+        true
+      );
+    }
+
+    if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+      navigator.clipboard.writeText(text).then(onSuccess).catch(function () {
+        if (copyWithExecCommand()) {
+          onSuccess();
+        } else {
+          onManualFallback();
+        }
+      });
+      return;
+    }
+
+    if (copyWithExecCommand()) {
+      onSuccess();
+    } else {
+      onManualFallback();
+    }
+  }
+
   function resetForm() {
     form.reset();
     actionsList.innerHTML = "";
@@ -494,6 +575,8 @@
     clearFieldErrors();
     resultArea.value = "";
     lastBuiltDocument = "";
+    clearCopyStatus();
+    updateCopyButtonState();
     document.getElementById("project-name").focus();
   }
 
@@ -528,6 +611,8 @@
     var documentText = buildDocument(collectData());
     resultArea.value = documentText;
     lastBuiltDocument = documentText;
+    clearCopyStatus();
+    updateCopyButtonState();
     resultArea.focus();
     resultArea.scrollIntoView({ behavior: "smooth", block: "start" });
   });
@@ -542,6 +627,15 @@
     resetForm();
   });
 
+  copyBtn.addEventListener("click", function () {
+    copyResultText();
+  });
+
+  resultArea.addEventListener("input", function () {
+    clearCopyStatus();
+    updateCopyButtonState();
+  });
+
   addActionBtn.addEventListener("click", function () {
     addAction("");
     var inputs = actionsList.querySelectorAll('input[name="actions[]"]');
@@ -553,4 +647,5 @@
 
   // Старт: одно пустое действие
   addAction("");
+  updateCopyButtonState();
 })();
