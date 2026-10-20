@@ -1,0 +1,373 @@
+:root {
+  --bg: #F4F2EE;
+  --surface: #FFFFFF;
+  --text: #1F2933;
+  --text-muted: #52606D;
+  --border: #D9E2EC;
+  --accent: #0F766E;
+  --accent-hover: #0B5F59;
+  --accent-soft: #E6F4F2;
+  --error: #B91C1C;
+  --error-bg: #FEF2F2;
+  --focus: #0F766E;
+  --radius: 10px;
+  --shadow: 0 1px 2px rgba(31, 41, 51, 0.06), 0 8px 24px rgba(31, 41, 51, 0.06);
+  --space: 1.25rem;
+  --max: 1200px;
+  --font: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--text);
+  background:
+    radial-gradient(ellipse at top left, rgba(15, 118, 110, 0.07), transparent 45%),
+    radial-gradient(ellipse at bottom right, rgba(31, 41, 51, 0.04), transparent 40%),
+    var(--bg);
+  min-height: 100vh;
+}
+
+.page {
+  width: min(100% - 2rem, var(--max));
+  margin: 0 auto;
+  padding: 2rem 0 3rem;
+}
+
+.page-header {
+  margin-bottom: 2rem;
+  max-width: 46rem;
+}
+
+.page-header h1 {
+  margin: 0 0 0.75rem;
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.lead {
+  margin: 0 0 0.75rem;
+  font-size: 1.125rem;
+  color: var(--text);
+}
+
+.note {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  padding: 0.85rem 1rem;
+  background: var(--accent-soft);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+@media (min-width: 960px) {
+  .layout {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    gap: 1.75rem;
+  }
+
+  .result-column {
+    position: sticky;
+    top: 1rem;
+  }
+}
+
+.block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.35rem 1.35rem 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.block h2 {
+  margin: 0 0 1rem;
+  font-size: 1.2rem;
+  letter-spacing: -0.01em;
+}
+
+.block-note {
+  margin: -0.35rem 0 1rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.field {
+  margin-bottom: 1.25rem;
+  border: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.field > label,
+.field > legend,
+.option-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+
+.field > legend {
+  padding: 0;
+}
+
+.hint {
+  margin: 0 0 0.5rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.optional {
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.required {
+  color: var(--accent);
+}
+
+input[type="text"],
+textarea,
+.result-area {
+  width: 100%;
+  max-width: 100%;
+  font: inherit;
+  color: var(--text);
+  background: #FBFCFA;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.7rem 0.85rem;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+textarea,
+.result-area {
+  resize: vertical;
+  min-height: 5rem;
+  line-height: 1.5;
+}
+
+input[type="text"]:hover,
+textarea:hover,
+.result-area:hover {
+  border-color: #9FB3C8;
+}
+
+input[type="text"]:focus,
+textarea:focus,
+.result-area:focus,
+.btn:focus-visible,
+.choice:focus-within {
+  outline: none;
+}
+
+input[type="text"]:focus,
+textarea:focus,
+.result-area:focus {
+  border-color: var(--focus);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.2);
+}
+
+.field.has-error input,
+.field.has-error textarea {
+  border-color: var(--error);
+  background: var(--error-bg);
+}
+
+.field.has-error input:focus,
+.field.has-error textarea:focus {
+  box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.18);
+}
+
+.error {
+  margin: 0.45rem 0 0;
+  color: var(--error);
+  font-size: 0.875rem;
+}
+
+.radio-group,
+.radio-inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+}
+
+.choice {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 400;
+  cursor: pointer;
+  padding: 0.35rem 0.55rem;
+  border-radius: 6px;
+}
+
+.choice:hover {
+  background: var(--accent-soft);
+}
+
+.choice input {
+  width: 1.05rem;
+  height: 1.05rem;
+  accent-color: var(--accent);
+  margin: 0;
+}
+
+.choice:focus-within {
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.2);
+}
+
+.options-grid .option-row {
+  display: grid;
+  gap: 0.4rem;
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--border);
+}
+
+.options-grid .option-row:first-of-type {
+  border-top: 0;
+  padding-top: 0.25rem;
+}
+
+.actions-list {
+  display: grid;
+  gap: 0.65rem;
+  margin-bottom: 0.75rem;
+}
+
+.action-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.5rem;
+  align-items: start;
+}
+
+.action-row input {
+  width: 100%;
+}
+
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 0.25rem 0 1rem;
+}
+
+.btn {
+  appearance: none;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font: inherit;
+  font-weight: 600;
+  padding: 0.75rem 1.15rem;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn:focus-visible {
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.28);
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: var(--accent-hover);
+}
+
+.btn-secondary {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.btn-secondary:hover {
+  background: var(--accent-soft);
+  border-color: #9BB8B4;
+}
+
+.btn-danger {
+  background: #fff;
+  color: var(--error);
+  border-color: #F1C0C0;
+}
+
+.btn-danger:hover {
+  background: var(--error-bg);
+}
+
+.result-column {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.35rem;
+  min-width: 0;
+}
+
+.result-column h2 {
+  margin: 0 0 0.85rem;
+  font-size: 1.2rem;
+}
+
+.result-area {
+  min-height: 28rem;
+  font-family: ui-monospace, "Cascadia Code", "Segoe UI Mono", Menlo, Consolas, monospace;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+.result-hint {
+  margin: 0.85rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 959px) {
+  .page {
+    width: min(100% - 1.25rem, var(--max));
+    padding-top: 1.5rem;
+  }
+
+  .result-area {
+    min-height: 18rem;
+  }
+}
